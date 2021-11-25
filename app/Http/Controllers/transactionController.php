@@ -5,9 +5,13 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use App\Models\TransactionHeader;
+use App\Models\MsCategory;
+use App\Models\TransactionDetail;
 
-class transactionController extends Controller
+class TransactionController extends Controller
 {
+    
     /**
      * Display a listing of the resource.
      *
@@ -15,7 +19,7 @@ class transactionController extends Controller
      */
     public function index(Request $request)
     {
-        $kategori = DB::table('ms_category')->get();
+        $kategori = MsCategory::all();
 
         $keyword = ''; $kat = ''; $start = ''; $end = '';
         if (!empty($request)) {
@@ -30,8 +34,7 @@ class transactionController extends Controller
             $start .= Carbon::parse($request->start)->toDateString();
             $end .= Carbon::parse($request->end)->toDateString();
             // dd($start.$end);
-           $transaction = DB::table('transaction_header')
-            ->select($select)
+           $transaction = TransactionHeader::select($select)
             ->join('transaction_detail', 'transaction_detail.transaction_id', '=', 'transaction_header.id')
             ->join('ms_category', 'ms_category.id', '=', 'transaction_detail.transaction_category_id')
             ->where('ms_category.id','like',"%".$kat."%")
@@ -47,8 +50,7 @@ class transactionController extends Controller
             ->appends(request()->query());
         }
         else{            
-            $transaction = DB::table('transaction_header')
-            ->select($select)
+            $transaction = TransactionHeader::select($select)
             ->join('transaction_detail', 'transaction_detail.transaction_id', '=', 'transaction_header.id')
             ->join('ms_category', 'ms_category.id', '=', 'transaction_detail.transaction_category_id')
             ->where('ms_category.id','like',"%".$kat."%")
@@ -78,8 +80,11 @@ class transactionController extends Controller
      */
     public function create()
     {
+        $kategori = MsCategory::all();
+
         return view('admin.transaction.create', [
-            'title' => 'Insert New Transaction'
+            'title' => 'Insert New Transaction',
+            'kategori' => $kategori
         ]);
     }
 
@@ -91,7 +96,42 @@ class transactionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // foreach ($request->kategori as $kategori) {
+            $this->validate($request, [
+               'description' => 'required',
+               'code' => 'required',
+               'rate_euro' => 'required|numeric|max:100000',
+               'date_paid' => 'required',
+               'name.*'  => 'required|string|distinct|min:3',
+               'value_idr.*'  => 'required|numeric|',
+            ]);
+        // }
+        try {
+            $store = TransactionHeader::create([
+               'description' => $request->description,
+               'code' => $request->code,
+               'rate_euro' => $request->rate_euro,
+               'date_paid' => Carbon::parse($request->date_paid)->toDateString(),
+            ]);
+            $detail = collect();
+            foreach($request->kategori as $kategori) {
+                
+                $detail->push(
+                    TransactionDetail::make([
+                        'transaction_id' => $store->id,
+                        'transaction_category_id'   => $kategori,
+                        'name' => $request->name,
+                        'value_idr' => $request->value_idr,
+                    ])
+                );
+            }
+            
+            return redirect('admin/transaction')->with('success', 'Saved Successfully!');
+        } catch (Exception $e) {
+            return back()->with('error','Oh snap! Please check your input. '.$e->getMessage());
+            
+        }
+
     }
 
     /**

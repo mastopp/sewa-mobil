@@ -2,8 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\loginController;
-use App\Http\Controllers\adminController;
-use App\Http\Controllers\transactionController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\TransactionController;
 
 /*
 |--------------------------------------------------------------------------

@@ -5,9 +5,15 @@
     <h1 class="h2">{{ $title }}</h1>
   </div>
   <div class="row">
+    @if(session()->has('success'))
+      <div class="alert alert-success alert-dismissable fade show" role="alert">
+        {{ session('success') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="close"></button>
+      </div>
+    @endif
     <div class="col-2"><a href="/admin/transaction/create" class="btn btn-dark"><span data-feather="plus"></span> Add New</a></div>
     <div class="col-10 me-auto">
-      <form method="get" action="/admin/transaction">
+      <form method="GET" action="/admin/transaction">
         
         <div class="form-group row">
           <div class="col-12">
