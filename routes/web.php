@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\loginController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\ReportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,10 +23,12 @@ Route::get('/', function(){
 
 Route::get('/login', [loginController::class, 'index'])->name('login')->middleware('guest');
 Route::post('/login', [loginController::class, 'authenticate']);
+Route::post('/logout', [loginController::class, 'logout']);
 
 Route::get('/admin', function(){
     return view('admin.index');
 })->middleware('auth');
 
-Route::post('/logout', [loginController::class, 'logout']);
-Route::resource('/admin/transaction', transactionController::class)->middleware('auth');
+
+Route::resource('/admin/transaction', TransactionController::class)->middleware('auth');
+Route::get('/admin/report', [ReportController::class, 'index'])->middleware('auth');

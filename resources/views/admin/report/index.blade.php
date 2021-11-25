@@ -11,7 +11,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="close"></button>
       </div>
     @endif
-    <div class="col-2"><a href="/admin/transaction/create" class="btn btn-dark"><span data-feather="plus"></span> Add New</a></div>
+    
     <div class="col-10 me-auto">
       <form method="GET" action="/admin/transaction">
         
@@ -45,14 +45,9 @@
       <thead>
         <tr>
           <th scope="col">#</th>
-          <th scope="col">Deskripsi</th>
-          <th scope="col">Code</th>
-          <th scope="col">Rate Euro</th>
           <th scope="col">Date Paid</th>
           <th scope="col">Kategori</th>
-          <th scope="col">Nama Transaksi</th>
           <th scope="col">Nominal(IDR)</th>
-          <th scope="col">Aksi</th>
         </tr>
       </thead>
       <tbody>
@@ -70,22 +65,10 @@
         @foreach($data as $k => $d)
         <tr>
           <td>{{ $k+1 }}</td>
-          <td>{{ $d->deskripsi }}</td>
-          <td>{{ $d->code }}</td>
-          <td>{{ $d->rate_euro }}</td>
           <td>{{ Carbon\Carbon::parse($d->date_paid)->format('d M Y') }}</td>
           <td>{{ $d->kategori }}</td>
           <td>{{ $d->nama_transaksi }}</td>
           <td>{{ $d->value_idr }}</td>
-          <td>
-            <a class="btn btn-sm btn-success" href="/admin/transaction/{{ $d->id_transaction }}"><span data-feather="edit"></span> Edit</a>
-
-            <form style="display:inline-block" onsubmit="return confirm('Are you Sure ?');" action="/admin/transaction/{{ $d->id }}" method="POST">
-                @method('DELETE')
-                @csrf
-                <button class="btn btn-sm btn-danger"><span data-feather="x-circle"></span>  Delete</button>
-            </form>
-          </td>
         </tr>
         @endforeach
       </tbody>

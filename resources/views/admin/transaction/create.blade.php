@@ -83,9 +83,13 @@
 
                   <div class="container">
                     <div class="card bg-default mb-3">
-                      <div class="card-header bg-default">Data Transaksi</div>
+                      <div class="card-header bg-default">Data Transaksi
+                        <!-- <div class="col-2">
+                          <a class="btn btn-dark new-trans"><span data-feather="plus"></span> New</a>
+                        </div> -->
+                      </div>
                       <div class="card-body text-dark">
-                        <div class="card container mb-3">
+                        <div class="card container mb-3" id="transaction">
                           <div class="form-group row mt-3 mb-3">
                             <div class="col-3">
                               <label class="">Category</label>
@@ -105,7 +109,7 @@
                                 </tr>
                                 <tr>
                                   <td>
-                                    <input class="form-control @error('name') is-invalid @enderror" type="text" name="name[]" required> 
+                                    <input class="form-control @error('name') is-invalid @enderror" type="text" name="name[0][]" value="{{ old('name') }}" required> 
                                     @error('name')
                                       <div class="invalid-feedback mt-2">
                                           {{ $message }}
@@ -113,19 +117,65 @@
                                     @enderror
                                   </td>
                                   <td>
-                                    <input class="form-control @error('value_idr') is-invalid @enderror" type="number" name="value_idr[]" required>
+                                    <input class="form-control @error('value_idr') is-invalid @enderror" type="number" name="value_idr[0][]" value="{{ old('value_idr') }}" required>
                                     @error('value_idr')
                                       <div class="invalid-feedback mt-2">
                                           {{ $message }}
                                       </div>
                                     @enderror
                                   </td>
-                                  <td></td>
+                                  <td>
+                                    
+                                  <a class="btn btn-dark new-dt" data-id="0" onClick="add()"><span data-feather="plus"></span> New</a>
+                                  </td>
+                                
+                                
                                 </tr>
                               </table>
                             </div>
-                            <div class="col-2">
-                              <a class="btn btn-dark" id="new-dt"><span data-feather="plus"></span> New</a>
+                          </div>
+                          
+                        </div>
+                        <div class="card container mb-3">
+                          <div class="form-group row mt-3 mb-3">
+                            <div class="col-3">
+                              <label class="">Category</label>
+                            </div>
+                            <div class="col-7">
+                              <select class="form-control form-select mb-3" name="kategori[]">
+                                @foreach($kategori as $k)
+                                <option value="{{ $k->id }}" {{ ($k->id == '2') ? 'selected' : '' }}>{{ $k->name }}</option>
+                                @endforeach
+                              </select>
+
+                              <table class="table table-striped table-bordered tabel-dt">
+                                <tr>
+                                  <th>Nama Transaksi</th>
+                                  <th>Nominal (IDR)</th>
+                                  <th></th>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <input class="form-control @error('name') is-invalid @enderror" type="text" name="name[1][]" value="{{ old('name') }}" required> 
+                                    @error('name')
+                                      <div class="invalid-feedback mt-2">
+                                          {{ $message }}
+                                      </div>
+                                    @enderror
+                                  </td>
+                                  <td>
+                                    <input class="form-control @error('value_idr') is-invalid @enderror" type="number" name="value_idr[1][]" value="{{ old('value_idr') }}" required>
+                                    @error('value_idr')
+                                      <div class="invalid-feedback mt-2">
+                                          {{ $message }}
+                                      </div>
+                                    @enderror
+                                  </td>
+                                  <td>
+                                    <a class="btn btn-dark new-dt" data-id="1" onClick="add()"><span data-feather="plus"></span> New</a>
+                                  </td>
+                                </tr>
+                              </table>
                             </div>
                           </div>
                           
@@ -150,17 +200,21 @@
 <script src="http://code.jquery.com/jquery-2.1.3.min.js"></script>
 <script>
     $(document).ready(function () {
-        $("#new-dt").click(function(){
-            $("#tabel-dt").append('<tr><td><input class="form-control" type="text" name="name[]" required></td><td><input class="form-control" type="number" name="value_idr[]" required></td><td><a class="btn btn-danger remove" onClick="remove()">x</a></td></tr>');      
-
+        $(".new-trans").click(function() {
+          $("div#transaction").clone().insertAfter("div.card:last").append('<a class="btn btn-danger remove" onClick="removeCat()">x</a>');
+        });
+        $(".new-dt").click(function(e){
+          var id = $(this).attr('data-id');
+            $(this).closest('tr').parent().append('<tr><td><input class="form-control" type="text" name="name['+id+'][]" required></td><td><input class="form-control" type="number" name="value_idr['+id+'][]" required></td><td><a class="btn btn-danger remove" onClick="remove()">x</a></td></tr>'); 
         });
 
-    })
+    });
     function remove() {
       $('td .remove').click(function(e){
           $(this).closest('tr').remove();
       });
     }
+
 
 
 </script>

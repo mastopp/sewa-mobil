@@ -16,6 +16,6 @@ class TransactionHeader extends Model
 
     public function transaction_detail()
     {
-        return $this->hasMany(transaction_detail::class);
+        return $this->hasMany(TransactionDetail::class, 'transaction_id','id');
     }
 }
