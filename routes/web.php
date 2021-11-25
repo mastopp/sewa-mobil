@@ -25,9 +25,7 @@ Route::get('/login', [loginController::class, 'index'])->name('login')->middlewa
 Route::post('/login', [loginController::class, 'authenticate']);
 Route::post('/logout', [loginController::class, 'logout']);
 
-Route::get('/admin', function(){
-    return view('admin.index');
-})->middleware('auth');
+Route::get('/admin', [AdminController::class, 'index'])->middleware('auth');
 
 
 Route::resource('/admin/transaction', TransactionController::class)->middleware('auth');

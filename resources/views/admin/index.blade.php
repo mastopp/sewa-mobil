@@ -10,7 +10,7 @@
       </div>
       <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
         <span data-feather="calendar"></span>
-        This week
+        {{ $title }}
       </button>
     </div>
   </div>
