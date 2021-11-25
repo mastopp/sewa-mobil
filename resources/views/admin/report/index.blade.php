@@ -13,7 +13,7 @@
     @endif
     
     <div class="col-10 me-auto">
-      <form method="GET" action="/admin/transaction">
+      <form method="GET" action="/admin/report">
         
         <div class="form-group row">
           <div class="col-12">
@@ -48,6 +48,7 @@
           <th scope="col">Date Paid</th>
           <th scope="col">Kategori</th>
           <th scope="col">Nominal(IDR)</th>
+
         </tr>
       </thead>
       <tbody>
@@ -67,7 +68,6 @@
           <td>{{ $k+1 }}</td>
           <td>{{ Carbon\Carbon::parse($d->date_paid)->format('d M Y') }}</td>
           <td>{{ $d->kategori }}</td>
-          <td>{{ $d->nama_transaksi }}</td>
           <td>{{ $d->value_idr }}</td>
         </tr>
         @endforeach

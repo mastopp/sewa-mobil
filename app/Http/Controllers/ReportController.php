@@ -22,7 +22,7 @@ class ReportController extends Controller
             
         }
         $select = [
-            'transaction_header.date_paid as date_paid', 'ms_category.name as kategori', 'transaction_detail.value_idr as value_idr'
+            'transaction_header.id as id','transaction_header.date_paid as date_paid', 'ms_category.name as kategori', 'transaction_detail.value_idr as value_idr'
         ];
         if (!empty($request->start) && !empty($request->end)) {
             $start .= Carbon::parse($request->start)->toDateString();
@@ -33,10 +33,7 @@ class ReportController extends Controller
             ->join('ms_category', 'ms_category.id', '=', 'transaction_detail.transaction_category_id')
             ->where('ms_category.id','like',"%".$kat."%")
             ->where(function($query) use ($request) {
-                $query->orWhere('transaction_header.description','like',"%".$request->keyword."%")
-                    ->orWhere('transaction_header.code','like',"%".$request->keyword."%")
-                    ->orWhere('transaction_detail.name','like',"%".$request->keyword."%")
-                    ->orWhere('ms_category.name','like',"%".$request->keyword."%");
+                $query->orWhere('ms_category.name','like',"%".$request->keyword."%");
             })
             ->whereBetween('transaction_header.date_paid', [$start, $end])
             ->orderBy('date_paid', 'ASC')
@@ -49,10 +46,7 @@ class ReportController extends Controller
             ->join('ms_category', 'ms_category.id', '=', 'transaction_detail.transaction_category_id')
             ->where('ms_category.id','like',"%".$kat."%")
             ->where(function($query) use ($request) {
-                $query->orWhere('transaction_header.description','like',"%".$request->keyword."%")
-                    ->orWhere('transaction_header.code','like',"%".$request->keyword."%")
-                    ->orWhere('transaction_detail.name','like',"%".$request->keyword."%")
-                    ->orWhere('ms_category.name','like',"%".$request->keyword."%");
+                $query->orWhere('ms_category.name','like',"%".$request->keyword."%");
             })
             ->orderBy('date_paid', 'ASC')
             ->paginate(10)
@@ -60,7 +54,7 @@ class ReportController extends Controller
         }
         
         // dd($transaction);
-        return view('admin.transaction.index', [
+        return view('admin.report.index', [
             'title' => 'Report Transaction',
             'data' => $transaction,
             'kategori' => $kategori,
