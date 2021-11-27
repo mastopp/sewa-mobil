@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\loginController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\MsCategoryController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\ReportController;
 
@@ -26,7 +27,6 @@ Route::post('/login', [loginController::class, 'authenticate']);
 Route::post('/logout', [loginController::class, 'logout']);
 
 Route::get('/admin', [AdminController::class, 'index'])->middleware('auth');
-
-
+Route::resource('/admin/mscategory', MsCategoryController::class)->middleware('auth');
 Route::resource('/admin/transaction', TransactionController::class)->middleware('auth');
 Route::get('/admin/report', [ReportController::class, 'index'])->middleware('auth');

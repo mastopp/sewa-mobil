@@ -32,8 +32,10 @@
 
             <input type="text" name="keyword" class="form-control" placeholder="keyword pencarian" value="{{ Request::get('keyword') }}">
           
-            <button type="submit" class="btn btn-sm btn-dark form-control"><span data-feather="search"></span> Search</button>
-            <a href="/admin/transaction" class="btn btn-sm btn-dark form-control"><span data-feather="x-circle"></span> Reset</a>         
+            <button type="submit" class="btn btn-dark"><span data-feather="search"></span> Search</button>
+            @if(Request::input())
+            <a href="/admin/transaction" class="btn btn-dark"><span data-feather="x-circle"></span> Reset</a>         
+            @endif
           </div>
         </div>
       </form>
