@@ -21,16 +21,17 @@ class ReportController extends Controller
             $kat .= $request->kategori;
             
         }
-        $select = [
-            'transaction_header.id as id','transaction_header.date_paid as date_paid', 'ms_category.name as kategori', 'transaction_detail.value_idr as value_idr'
-        ];
+        $select = 
+            'transaction_header.date_paid as date_paid, ms_category.name as kategori, sum(transaction_detail.value_idr) as value_idr'
+        ;
         if (!empty($request->start) && !empty($request->end)) {
             $start .= Carbon::parse($request->start)->toDateString();
             $end .= Carbon::parse($request->end)->toDateString();
             // dd($start.$end);
-           $transaction = TransactionHeader::select($select)
+           $transaction = TransactionHeader::selectRaw($select)
             ->join('transaction_detail', 'transaction_detail.transaction_id', '=', 'transaction_header.id')
             ->join('ms_category', 'ms_category.id', '=', 'transaction_detail.transaction_category_id')
+            ->groupBy('transaction_header.date_paid', 'ms_category.id')
             ->where('ms_category.id','like',"%".$kat."%")
             ->where(function($query) use ($request) {
                 $query->orWhere('ms_category.name','like',"%".$request->keyword."%");
@@ -41,9 +42,10 @@ class ReportController extends Controller
             ->appends(request()->query());
         }
         else{            
-            $transaction = TransactionHeader::select($select)
+            $transaction = TransactionHeader::selectRaw($select)
             ->join('transaction_detail', 'transaction_detail.transaction_id', '=', 'transaction_header.id')
             ->join('ms_category', 'ms_category.id', '=', 'transaction_detail.transaction_category_id')
+            ->groupBy('transaction_header.date_paid', 'ms_category.id')
             ->where('ms_category.id','like',"%".$kat."%")
             ->where(function($query) use ($request) {
                 $query->orWhere('ms_category.name','like',"%".$request->keyword."%");

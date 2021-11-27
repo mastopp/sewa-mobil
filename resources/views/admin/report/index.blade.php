@@ -33,7 +33,7 @@
             <input type="text" name="keyword" class="form-control" placeholder="keyword pencarian" value="{{ Request::get('keyword') }}">
           
             <button type="submit" class="btn btn-sm btn-dark form-control"><span data-feather="search"></span> Search</button>
-            <a href="/admin/transaction" class="btn btn-sm btn-dark form-control"><span data-feather="x-circle"></span> Reset</a>         
+            <a href="/admin/report" class="btn btn-sm btn-dark form-control"><span data-feather="x-circle"></span> Reset</a>         
           </div>
         </div>
       </form>
